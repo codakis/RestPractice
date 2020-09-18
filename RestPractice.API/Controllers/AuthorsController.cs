@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RestPractice.API.Helpers;
 using RestPractice.API.Models;
+using RestPractice.API.ResourceParameters;
 using RestPractice.API.Services;
 
 namespace RestPractice.API.Controllers
@@ -24,9 +25,9 @@ namespace RestPractice.API.Controllers
         }
        [HttpGet]
        [HttpHead]
-        public ActionResult<IEnumerable<AuthorDto>> GetAuthors()
+        public ActionResult<IEnumerable<AuthorDto>> GetAuthors([FromQuery]AuthorsResourceParameters authorsResourceParameters)
         {
-            var authors = _repository.GetAuthors();
+            var authors = _repository.GetAuthors(authorsResourceParameters);
             // var authorsDto = new List<AuthorDto>();
             // foreach (var authorDto in authors)
             // {
