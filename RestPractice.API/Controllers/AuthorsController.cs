@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using RestPractice.API.Helpers;
+using RestPractice.API.Models;
 using RestPractice.API.Services;
 
 namespace RestPractice.API.Controllers
@@ -16,10 +19,21 @@ namespace RestPractice.API.Controllers
                 throw new ArgumentNullException(nameof(repository));
         }
        
-        public IActionResult GetAuthors()
+        public ActionResult<IEnumerable<AuthorDto>> GetAuthors()
         {
             var authors = _repository.GetAuthors();
-            return  Ok(authors);
+            var authorsDto = new List<AuthorDto>();
+            foreach (var authorDto in authors)
+            {
+                   authorsDto.Add(new AuthorDto()
+                   {
+                       Id = authorDto.Id,
+                       Name = $"{authorDto.FirstName} {authorDto.LastName}",
+                       MainCategory = authorDto.MainCategory,
+                       Age = authorDto.DateOfBirth.GetCurrentAge()
+                   }); 
+            }
+            return  Ok(authorsDto);
         }
 
         [HttpGet("{authorId}")]
