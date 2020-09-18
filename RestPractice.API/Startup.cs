@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using RestPractice.API.DbContexts;
 using RestPractice.API.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace RestPractice.API
 {
@@ -49,6 +50,18 @@ namespace RestPractice.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler(appBuilder =>
+                    {
+                        appBuilder.Run(async context =>
+                        {
+                            context.Response.StatusCode = 500;
+                            await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                        });
+                    }
+                    );
             }
 
             app.UseHttpsRedirection();

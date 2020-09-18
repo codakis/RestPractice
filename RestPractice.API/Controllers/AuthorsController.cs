@@ -22,7 +22,8 @@ namespace RestPractice.API.Controllers
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
         }
-       
+       [HttpGet]
+       [HttpHead]
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors()
         {
             var authors = _repository.GetAuthors();
