@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RestPractice.API.Helpers;
 using RestPractice.API.Models;
@@ -12,28 +13,31 @@ namespace RestPractice.API.Controllers
     public class AuthorsController :ControllerBase
     {
         private readonly ICourseLibraryRepository _repository;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(ICourseLibraryRepository repository)
+        public AuthorsController(ICourseLibraryRepository repository, IMapper mapper)
         {
             _repository = repository ?? 
-                throw new ArgumentNullException(nameof(repository));
+                          throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ??
+                      throw new ArgumentNullException(nameof(mapper));
         }
        
         public ActionResult<IEnumerable<AuthorDto>> GetAuthors()
         {
             var authors = _repository.GetAuthors();
-            var authorsDto = new List<AuthorDto>();
-            foreach (var authorDto in authors)
-            {
-                   authorsDto.Add(new AuthorDto()
-                   {
-                       Id = authorDto.Id,
-                       Name = $"{authorDto.FirstName} {authorDto.LastName}",
-                       MainCategory = authorDto.MainCategory,
-                       Age = authorDto.DateOfBirth.GetCurrentAge()
-                   }); 
-            }
-            return  Ok(authorsDto);
+            // var authorsDto = new List<AuthorDto>();
+            // foreach (var authorDto in authors)
+            // {
+            //        authorsDto.Add(new AuthorDto()
+            //        {
+            //            Id = authorDto.Id,
+            //            Name = $"{authorDto.FirstName} {authorDto.LastName}",
+            //            MainCategory = authorDto.MainCategory,
+            //            Age = authorDto.DateOfBirth.GetCurrentAge()
+            //        }); 
+            // }
+            return  Ok(_mapper.Map<IEnumerable<AuthorDto>>(authors));
         }
 
         [HttpGet("{authorId}")]
@@ -48,7 +52,7 @@ namespace RestPractice.API.Controllers
             // {
             //     return NotFound();
             // }
-            return Ok(author);
+            return Ok(_mapper.Map<AuthorDto>(author));
         }
     }
 }

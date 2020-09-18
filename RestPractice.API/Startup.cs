@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RestPractice.API.DbContexts;
 using RestPractice.API.Services;
+using AutoMapper;
 
 namespace RestPractice.API
 {
@@ -34,6 +35,7 @@ namespace RestPractice.API
                 setupAction.ReturnHttpNotAcceptable = true;
                 // setupAction.OutputFormatters.Add(new XmlSerializerOutputFormatter());
             }).AddXmlDataContractSerializerFormatters();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
             services.AddDbContext<CourseLibraryContext>(opt =>
             {
